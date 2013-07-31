@@ -9,23 +9,29 @@
 //5)Do not allow page to refresh
 
 var Form = {
-
+	"validateNotEmpty" : function ( element ){
+		var element_length = element.value.length;
+		if( element_length == null || element_length == undefined || element_length <= 0 ){
+			return Form.error_empty;
+		} else {
+			return '';
+		}
+	},
 	"validateLength" : function( element ){
 		var element_length = element.value.length;
 		
 		//console.log(element_length);
 
 		//if element is not empty continue with check
-		if(  (element_length != null && element_length != undefined) && element_length > 0 ) {
+		if(  (element_length != null && element_length != undefined) && element_length > 0 && element_length < 3) {
 			//console.log( "value is not empty" );
-			
-			if( element_length < 3 ||  element_length > 50 ){
+			return Form.error_less_than_3_char;
+		}else if( element_length > 50 ){
 				//console.log( "Please make sure element_value is between 3 to 50 characters." );
-				Form.div_errors.innerHTML += "<p style='color:red;'>Name should be between 3 and 50 characters</p>";
-			}
+				return Form.error_greater_than_fifty_char;
 		} else {
 			//console.log( "Value is empty" );
-			Form.div_errors.innerHTML += "<p style='color:red;'>Please enter a name.</p>";
+			return '';
 
 		}
 		//console.log( first_name.value );
@@ -35,19 +41,19 @@ var Form = {
 		var element_value = element.value;
 		if (element_value != undefined && element_value != null){
 			//Checks if element value matches Regular Expression of 5 digits
-			if(!(element.value.match(/^\d\d\d\d\d$/))){
+			if(!(element.value.match(/^\d\d\d\d\d$/)) && element_value.length > 0){
 				//console.log("zip code is not right");
-				Form.div_errors.innerHTML += "<p style='color:red;'>Please check your zip code</p>";
+				return Form.error_format;
+			} else {
+				return '';
 			}
-		} else {
-			//console.log("zipcode is not right");
-			Form.div_errors.innerHTML += "<p style='color:red;'>Please enter your zip code</p>";
 		}
 	},
-	"clearErrors" : function( element ){
-		Form.div_errors.innerHTML = "";
-	},
-	"div_errors" : document.getElementById("errors"),
+	
+	"error_empty" : " field is empty.",
+	"error_less_than_3_char" : " field has less than 3 characters.",
+	"error_greater_than_fifty_char" : " field has more than 50 characters.",
+	"error_format" : " field does not match proper format.",
 
 };
 
